@@ -72,6 +72,19 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    // In managed/Replit environments the platform router forwards /api to the
+    // Express server. Locally (and in the v0 preview) we proxy it here so the
+    // web app can reach the shared API server without changing app code.
+    ...(process.env.VITE_API_PROXY_TARGET
+      ? {
+          proxy: {
+            '/api': {
+              target: process.env.VITE_API_PROXY_TARGET,
+              changeOrigin: true,
+            },
+          },
+        }
+      : {}),
   },
   preview: {
     port,
