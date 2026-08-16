@@ -5,7 +5,6 @@
  * BharatShield prototype risk analysis API
  * OpenAPI spec version: 0.1.0
  */
+import type { AnalysisResult } from './analysisResult';
 
-export interface HealthStatus {
-  status: string;
-}
+export type HistoryItem = AnalysisResult;

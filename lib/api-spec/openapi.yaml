@@ -3,13 +3,19 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: BharatShield prototype risk analysis API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: analysis
+    description: Prototype risk analysis operations
+  - name: history
+    description: Saved analysis history
+  - name: models
+    description: Prototype model status
 paths:
   /healthz:
     get:
@@ -24,6 +30,102 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /analyze/text:
+    post:
+      operationId: analyzeText
+      tags: [analysis]
+      summary: Analyze a suspicious text message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextAnalysisInput"
+      responses:
+        "200":
+          description: Prototype text analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+        "400":
+          description: Invalid text input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /analyze/file:
+    post:
+      operationId: analyzeFile
+      tags: [analysis]
+      summary: Analyze file metadata with a prototype analyzer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileAnalysisInput"
+      responses:
+        "200":
+          description: Prototype file analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+        "400":
+          description: Invalid file metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /history:
+    get:
+      operationId: getHistory
+      tags: [history]
+      summary: List saved prototype analyses
+      responses:
+        "200":
+          description: Saved analyses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HistoryItem"
+  /history/{id}:
+    delete:
+      operationId: deleteHistory
+      tags: [history]
+      summary: Delete a saved analysis
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Analysis deleted
+        "404":
+          description: Analysis not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /models:
+    get:
+      operationId: getModels
+      tags: [models]
+      summary: List prototype model statuses
+      responses:
+        "200":
+          description: Model statuses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ModelStatus"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +135,104 @@ components:
           type: string
       required:
         - status
+    TextAnalysisInput:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        language:
+          type: string
+          enum: [en, hi]
+      required: [text]
+    FileAnalysisInput:
+      type: object
+      properties:
+        fileName:
+          type: string
+          minLength: 1
+          maxLength: 255
+        fileType:
+          type: string
+          minLength: 1
+          maxLength: 100
+        fileSize:
+          type: number
+          minimum: 1
+          maximum: 26214400
+        contentType:
+          type: string
+          enum: [audio, image, video]
+        demo:
+          type: boolean
+      required: [fileName, fileType, fileSize, contentType]
+    AnalysisResult:
+      type: object
+      properties:
+        id:
+          type: string
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+        riskLevel:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+        signals:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+        prototype:
+          type: boolean
+        demo:
+          type: boolean
+        contentType:
+          type: string
+          enum: [text, audio, image, video]
+        language:
+          type: string
+        sourceLabel:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - score
+        - riskLevel
+        - signals
+        - explanation
+        - recommendations
+        - prototype
+        - demo
+        - contentType
+        - language
+        - sourceLabel
+        - createdAt
+    HistoryItem:
+      allOf:
+        - $ref: "#/components/schemas/AnalysisResult"
+    ModelStatus:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+        description:
+          type: string
+      required: [name, status, description]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
 

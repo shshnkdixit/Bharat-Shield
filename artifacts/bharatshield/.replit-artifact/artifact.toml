@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "BharatShield"
+description = "A cybersecurity-focused web app for multilingual, AI-assisted risk assessment of suspicious text, audio, image, and video content, with explainable prototype results and local analysis history."
+version = "1.0.0"
+id = "artifacts/bharatshield"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24705
+
+[services.development]
+run = "pnpm --filter @workspace/bharatshield run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/bharatshield", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/bharatshield/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24705"
+BASE_PATH = "/"

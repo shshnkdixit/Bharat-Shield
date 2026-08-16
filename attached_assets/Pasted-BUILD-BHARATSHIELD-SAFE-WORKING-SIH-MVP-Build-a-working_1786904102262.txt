@@ -1,0 +1,727 @@
+BUILD BHARATSHIELD — SAFE, WORKING SIH MVP
+
+Build a working hackathon prototype called:
+
+BharatShield
+
+Verify Before You Trust.
+
+This is an SIH 2026 software project for the:
+
+Blockchain & Cyber Security domain.
+
+IMPORTANT: Build a SMALL, STABLE MVP first. Do NOT over-engineer it.
+
+The priority order is:
+
+1. App must render correctly in Replit Preview.
+2. All main buttons/routes must work.
+3. Text analysis must actually work.
+4. Demo audio/image/video analysis must work using clearly labelled prototype/demo analyzers.
+5. UI must look professional.
+6. Only after all of this is working should you add optional features.
+
+DO NOT build real deepfake ML models in this first pass.
+DO NOT build a Python server.
+DO NOT build multiple servers.
+DO NOT add blockchain infrastructure.
+DO NOT add unnecessary packages.
+DO NOT create a complicated microservice architecture.
+
+We will integrate real ML models later.
+
+---
+
+1. TECH STACK — FOLLOW EXACTLY
+
+Use ONE application/server only.
+
+Frontend:
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+
+Backend:
+
+- Node.js
+- Express
+- TypeScript
+
+Database:
+
+- SQLite only if required.
+- Prefer simple in-memory/local persistence for the first MVP if database setup is unnecessary.
+
+Use a SINGLE PORT.
+
+The server MUST listen on:
+
+0.0.0.0
+
+and use:
+
+process.env.PORT
+
+Do not hard-code localhost ports.
+
+The Replit Preview must open the same application served by this single server.
+
+Do NOT create separate frontend and backend servers.
+
+---
+
+2. FIRST TASK — MAKE THE APP RENDER
+
+Before implementing advanced functionality:
+
+1. Create the project.
+2. Start the application.
+3. Verify the Replit Preview.
+4. Make sure the homepage renders.
+5. Check browser console for errors.
+6. Check server logs.
+7. Fix every runtime/build error.
+
+DO NOT proceed to advanced features until the homepage successfully renders.
+
+At the end of each major implementation step, verify that the app still loads.
+
+---
+
+3. PRODUCT
+
+BharatShield helps users assess suspicious digital content.
+
+Supported input types:
+
+- Text/message
+- Audio
+- Image
+- Video
+
+The system returns:
+
+- Risk Score
+- Risk Level
+- Detected Signals
+- Explanation
+- Recommended Action
+
+Important:
+
+This is an AI-assisted risk assessment system.
+
+Never claim:
+
+"100% fake"
+
+"100% real"
+
+"99.9% accurate"
+
+Instead use language such as:
+
+"High Risk"
+
+"Possible synthetic content"
+
+"Model/Prototype estimated risk"
+
+"Further verification recommended"
+
+---
+
+4. HOMEPAGE
+
+Create a polished cybersecurity-style landing page.
+
+Hero:
+
+BharatShield
+
+Verify Before You Trust.
+
+Subtitle:
+
+"Multilingual AI-assisted digital trust and scam-risk analysis."
+
+Buttons:
+
+[ Analyze Content ]
+
+[ Try Demo ]
+
+Show 3 feature cards:
+
+MULTIMODAL
+
+Audio • Video • Image • Text
+
+MULTILINGUAL
+
+Designed for Indian-language users
+
+EXPLAINABLE
+
+Understand WHY something is suspicious
+
+Add a small SIH badge:
+
+SIH 2026 • Blockchain & Cyber Security
+
+---
+
+5. NAVIGATION
+
+Create these pages:
+
+/
+
+/analyze
+
+/history
+
+/demo
+
+/models
+
+/about
+
+Use React Router.
+
+Every route must actually render.
+
+No dead links.
+
+Add a simple responsive navbar/sidebar.
+
+---
+
+6. ANALYZE PAGE
+
+Create four tabs:
+
+[ Text ] [ Audio ] [ Image ] [ Video ]
+
+TEXT TAB
+
+Large textarea:
+
+"Paste suspicious message here..."
+
+Button:
+
+[ Analyze Message ]
+
+Include:
+
+[ Load Demo Scam ]
+
+Example demo:
+
+"Your bank account will be blocked today. Complete KYC immediately using this link."
+
+The text analyzer should detect simple risk indicators such as:
+
+- urgency
+- financial request
+- OTP/password request
+- suspicious link
+- threat
+- impersonation
+- suspicious call-to-action
+
+Return a real structured result.
+
+Example:
+
+Risk Score: 88/100
+
+Risk Level: HIGH
+
+Signals:
+
+- Urgency detected
+- Financial request detected
+- Suspicious call-to-action detected
+
+Explanation:
+"The message attempts to create urgency and asks the user to take an immediate action."
+
+Recommendation:
+"Verify the sender independently and do not share financial credentials."
+
+This is a PROTOTYPE rule-based analyzer, not a trained AI model.
+Clearly label it:
+
+"Prototype Risk Analysis"
+
+---
+
+7. FILE ANALYSIS
+
+For Audio, Image and Video:
+
+Allow users to upload files.
+
+Validate:
+
+- file type
+- file size
+- empty files
+
+Show:
+
+- filename
+- file type
+- size
+- preview where possible
+
+Then run a lightweight prototype analyzer.
+
+DO NOT pretend to perform real deepfake detection.
+
+For the first MVP, the analyzer should inspect available file information and use clearly labelled demo/prototype logic.
+
+Result example:
+
+Risk Score: 72/100
+
+Risk Level: HIGH
+
+Status:
+
+"Prototype analysis"
+
+Indicators:
+
+"Content requires further verification."
+
+Limitations:
+
+"No trained forensic deepfake model is connected in this prototype."
+
+Also provide:
+
+[ Try Demo Analysis ]
+
+This allows the complete UI flow to work without expensive ML dependencies.
+
+---
+
+8. RESULT COMPONENT
+
+Create one reusable ResultCard component used for text/audio/image/video.
+
+Display:
+
+Overall Risk
+
+LOW / MEDIUM / HIGH / CRITICAL
+
+Risk Score:
+72 / 100
+
+Confidence:
+"Prototype estimate"
+
+Then:
+
+Detected Signals
+
+Show cards.
+
+Why was this flagged?
+
+Explain in simple language.
+
+What should you do?
+
+For HIGH/CRITICAL:
+
+- Verify the source independently.
+- Do not transfer money.
+- Do not share OTP/password/PIN.
+- Avoid suspicious links.
+- Confirm identity through another trusted channel.
+
+Add:
+
+[ Save Analysis ]
+
+[ View Report ]
+
+---
+
+9. RISK ENGINE
+
+Create one simple reusable risk engine.
+
+Input:
+
+signals and scores
+
+Output:
+
+score from 0–100
+
+Risk levels:
+
+0–24 LOW
+25–49 MEDIUM
+50–74 HIGH
+75–100 CRITICAL
+
+Keep this logic in one backend utility/service.
+
+Do not create a complicated ML pipeline.
+
+---
+
+10. MULTILINGUAL UI
+
+Initially support:
+
+English
+Hindi
+
+Add language selector.
+
+Example:
+
+English:
+"High risk. The message contains urgency and a financial request."
+
+Hindi:
+"उच्च जोखिम। संदेश में तुरंत कार्रवाई करने का दबाव और पैसे की मांग है।"
+
+Structure the code so Punjabi and Bhojpuri can be added later.
+
+Do not add a complicated translation API in this MVP.
+
+Use local translation dictionaries for UI/demo explanations.
+
+---
+
+11. DEMO LAB
+
+Create a visually impressive Demo Lab.
+
+Cards:
+
+Demo 1 — Hindi Scam Message
+
+Expected:
+HIGH RISK
+
+Demo 2 — Normal Message
+
+Expected:
+LOW RISK
+
+Demo 3 — Suspicious Voice
+
+Expected:
+HIGH RISK
+
+Demo 4 — Suspicious Image
+
+Expected:
+MEDIUM/HIGH RISK
+
+Demo 5 — Suspicious Video
+
+Expected:
+HIGH RISK
+
+Every demo must clearly display:
+
+"DEMO DATA"
+
+"PROTOTYPE ANALYSIS"
+
+Never represent simulated results as real ML predictions.
+
+---
+
+12. HISTORY
+
+Create an analysis history page.
+
+For every analysis store:
+
+- Analysis ID
+- date/time
+- content type
+- language
+- risk score
+- risk level
+- prototype/demo status
+
+Show cards/table.
+
+Include:
+
+[ View ]
+
+[ Delete ]
+
+Use simple local persistence if possible.
+
+Do not introduce a complicated authentication system.
+
+---
+
+13. MODELS PAGE
+
+Create:
+
+AI Model Center
+
+Show:
+
+Audio Analysis
+Status: Prototype
+
+Video Analysis
+Status: Prototype
+
+Image Analysis
+Status: Prototype
+
+Text Risk Analysis
+Status: Active Prototype
+
+Multilingual Layer
+Status: Active
+
+Risk Engine
+Status: Active
+
+Add:
+
+Future Integration
+
+Real models can later be connected for:
+
+- audio deepfake detection
+- image manipulation detection
+- video deepfake detection
+- multilingual NLP
+
+Clearly label these as future integrations.
+
+---
+
+14. ABOUT PAGE
+
+Explain:
+
+Problem
+
+AI-generated media, phishing, impersonation and scam messages are making digital trust difficult.
+
+Solution
+
+BharatShield provides an accessible risk-assessment layer for suspicious digital content.
+
+Innovation
+
+- Multimodal
+- Multilingual
+- Explainable
+- Cybersecurity-focused
+- Indian-user focused
+
+SIH Domain
+
+Blockchain & Cyber Security
+
+Limitation
+
+"Prototype results are not definitive proof of authenticity or fraud."
+
+---
+
+15. SECURITY
+
+Implement basic secure file handling:
+
+- file type validation
+- file size limit
+- sanitized filenames
+- no execution of uploaded files
+- temporary file cleanup
+- input validation
+- safe error messages
+
+Never expose stack traces to users.
+
+Do not put secrets in frontend code.
+
+---
+
+16. BACKEND API
+
+Use the same Node/Express server.
+
+Create:
+
+POST /api/analyze/text
+
+POST /api/analyze/file
+
+GET /api/history
+
+DELETE /api/history/:id
+
+GET /api/models
+
+GET /api/health
+
+All API responses should be JSON.
+
+Example:
+
+{
+"score": 88,
+"riskLevel": "HIGH",
+"signals": [
+"Urgency detected",
+"Financial request detected"
+],
+"explanation": "...",
+"recommendations": ["..."],
+"prototype": true
+}
+
+---
+
+17. UI QUALITY
+
+Make it look like a professional cybersecurity startup.
+
+Use:
+
+- clean dark/light compatible design
+- shield/security visual identity
+- professional cards
+- clear risk indicators
+- responsive layout
+- subtle animations
+- good spacing
+- accessible buttons
+
+Do NOT make it look like a generic AI chatbot.
+
+The homepage and Analyze page are the most important screens.
+
+---
+
+18. IMPORTANT — KEEP THE CODE SIMPLE
+
+Do NOT install packages unless necessary.
+
+Do NOT create:
+
+- Python backend
+- FastAPI
+- PostgreSQL
+- Redis
+- Docker
+- Kubernetes
+- blockchain node
+- multiple servers
+- external ML infrastructure
+
+for this first MVP.
+
+The purpose is to get a reliable working prototype.
+
+---
+
+19. FUTURE ARCHITECTURE
+
+Keep analyzer code modular so later we can replace:
+
+PrototypeAudioAnalyzer
+→ RealAudioDeepfakeModel
+
+PrototypeImageAnalyzer
+→ RealImageModel
+
+PrototypeVideoAnalyzer
+→ RealVideoModel
+
+PrototypeTextAnalyzer
+→ RealNLPModel
+
+But do not implement those expensive models now.
+
+---
+
+20. FINAL ACCEPTANCE TEST
+
+Before telling me the project is complete, YOU MUST actually test:
+
+1. Homepage loads in Replit Preview.
+2. /analyze loads.
+3. Text analysis works.
+4. Demo scam works.
+5. Audio upload works.
+6. Image upload works.
+7. Video upload works.
+8. Result page renders.
+9. Risk score appears.
+10. Explanation appears.
+11. Recommendations appear.
+12. History works.
+13. Demo Lab works.
+14. Models page works.
+15. About page works.
+16. Navigation works.
+17. Mobile layout does not break.
+18. Browser console has no critical errors.
+19. Server has no critical errors.
+20. Replit Preview shows the actual BharatShield UI.
+
+If the Preview is blank, DO NOT claim the project is complete.
+
+Debug the actual issue first.
+
+Check:
+
+- browser console
+- server logs
+- routing
+- port
+- host
+- Vite configuration
+- Express configuration
+- API URLs
+- build errors
+- runtime errors
+
+The application must listen on 0.0.0.0 and use process.env.PORT.
+
+---
+
+21. FINAL OUTPUT
+
+After successfully testing the application, provide:
+
+1. Short summary of what was built.
+2. How to run it.
+3. Main routes.
+4. Demo instructions.
+5. Current prototype limitations.
+6. Future real-ML integration plan.
+
+DO NOT say "ready to publish" unless you have actually verified that the Replit Preview visibly renders and the main user flow works.
+
+START BY BUILDING THE SIMPLE WORKING MVP.
+DO NOT OVER-ENGINEER.
+DO NOT BUILD REAL ML MODELS YET.
+MAKE THE PREVIEW WORK FIRST.

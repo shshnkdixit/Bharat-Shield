@@ -1,0 +1,1 @@
+- [Codegen and preview quirks](codegen-and-preview-quirks.md) — OpenAPI numeric schemas and direct Vite builds have workspace-specific environment constraints.

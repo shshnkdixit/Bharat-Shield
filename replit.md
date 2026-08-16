@@ -1,15 +1,15 @@
-# [Project name]
+# BharatShield
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+BharatShield is a cybersecurity-focused prototype that helps people pause and assess suspicious messages and media metadata before they click, pay, or forward.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the shared API server
+- `pnpm --filter @workspace/bharatshield run dev` — run the BharatShield web app
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- The managed preview workflows provide `PORT` and `BASE_PATH`.
 
 ## Stack
 
@@ -22,23 +22,33 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/bharatshield/src/App.tsx` — routes, pages, analysis flows, and shared result UI
+- `artifacts/bharatshield/src/index.css` — BharatShield visual language and responsive layout
+- `artifacts/api-server/src/lib/risk-engine.ts` — shared score and risk-level thresholds
+- `artifacts/api-server/src/routes/analysis.ts` — rule-based text analyzer, prototype file analyzer, and in-memory history
+- `artifacts/api-server/src/routes/models.ts` — model status catalog
+- `lib/api-spec/openapi.yaml` — source of truth for the typed API contract
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The MVP intentionally uses a rule-based text analyzer and file metadata-only analysis; real forensic/deepfake models are future integrations.
+- Analysis results are stored in server memory for the prototype, keeping the first pass stable without database setup or authentication.
+- The generated API client and Zod schemas are the contract boundary between the web app and the shared Express API server.
+- English and Hindi copy are local dictionaries so more Indian languages can be added without introducing a translation service.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Users can assess suspicious text, audio, image, and video metadata; inspect explainable risk signals and recommendations; explore synthetic demo scenarios; review API-saved history; see model integration status; and read the product’s limitations.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+No additional user preferences recorded.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After changing `lib/api-spec/openapi.yaml`, run `pnpm --filter @workspace/api-spec run codegen` before using regenerated hooks or schemas.
+- Direct Vite builds need temporary `PORT` and `BASE_PATH`; the managed web workflow supplies them automatically.
+- Media analysis does not inspect uploaded bytes in this prototype; the browser validates the file and sends safe metadata only.
 
 ## Pointers
 
