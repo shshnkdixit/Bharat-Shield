@@ -72,6 +72,15 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    proxy: {
+      // Forward API calls to the Express API server (see dev.mjs). This lets
+      // the frontend use relative /api/* URLs while the backend runs on a
+      // separate internal port.
+      '/api': {
+        target: process.env.API_PROXY_TARGET || 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     port,
