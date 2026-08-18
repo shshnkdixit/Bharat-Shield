@@ -5,27 +5,20 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { mockupPreviewPlugin } from "./mockupPreviewPlugin";
 
+// Read envs but do not throw during build. Only validate port when we need to start a dev/preview server.
 const rawPort = process.env.PORT;
-
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
+let port: number | undefined;
+if (rawPort !== undefined && rawPort !== "") {
+  const p = Number(rawPort);
+  if (Number.isNaN(p) || p <= 0) {
+    throw new Error(`Invalid PORT value: "${rawPort}"`);
+  }
+  port = p;
 }
 
-const port = Number(rawPort);
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
-
-const basePath = process.env.BASE_PATH;
-
-if (!basePath) {
-  throw new Error(
-    "BASE_PATH environment variable is required but was not provided.",
-  );
-}
+// For production builds on Vercel, BASE_PATH may not be provided.
+// Use a sensible default (root) so builds don't fail.
+const basePath = process.env.BASE_PATH ?? "/";
 
 export default defineConfig({
   base: basePath,
@@ -56,7 +49,7 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port,
+    ...(port ? { port } : {}),
     host: "0.0.0.0",
     allowedHosts: true,
     fs: {
@@ -64,7 +57,7 @@ export default defineConfig({
     },
   },
   preview: {
-    port,
+    ...(port ? { port } : {}),
     host: "0.0.0.0",
     allowedHosts: true,
   },
