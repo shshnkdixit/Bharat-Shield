@@ -72,6 +72,18 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    // In environments without an external `/api` router (e.g. local/v0 dev),
+    // proxy API calls to the shared Express server. No-op when unset (Replit).
+    ...(process.env.API_PROXY_TARGET
+      ? {
+          proxy: {
+            '/api': {
+              target: process.env.API_PROXY_TARGET,
+              changeOrigin: true,
+            },
+          },
+        }
+      : {}),
   },
   preview: {
     port,
