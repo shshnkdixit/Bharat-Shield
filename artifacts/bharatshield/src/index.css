@@ -240,6 +240,23 @@ input:focus-visible,
 .board-foot .foot-label { color: var(--text-dim); font: 600 10px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
 .board-foot .foot-value { color: var(--risk-critical); font-weight: 700; font-size: 13px; }
 
+/* floating stat chips over the board */
+.board-card { position: relative; }
+.board-float {
+  position: absolute; right: -22px; padding: 13px 17px; border-radius: 13px; z-index: 2;
+  background: linear-gradient(180deg, var(--surface-3), var(--surface-2));
+  border: 1px solid var(--line-strong); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+  animation: rise 0.7s 0.35s ease both;
+}
+.board-float { top: 58px; }
+.board-float.bottom { top: auto; bottom: -24px; right: auto; left: 20px; }
+.float-caption { font: 700 9px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+.float-value { margin-top: 4px; font-weight: 700; font-size: 15px; color: var(--text); letter-spacing: -0.02em; }
+.board-float.bottom .float-value { color: var(--risk-critical); }
+
+.hero-note { display: inline-flex; align-items: center; gap: 9px; margin-top: 8px; color: var(--text-dim); font-size: 13px; line-height: 1.5; }
+.hero-note svg { color: var(--risk-low); flex: none; }
+
 /* ------------------------------------------------------------------ SECTIONS */
 .home-section { max-width: var(--shell-max); margin: 0 auto; padding: clamp(64px, 8vw, 108px) var(--pad-x); }
 .section-head { max-width: 720px; margin-bottom: 46px; }
@@ -306,6 +323,19 @@ input:focus-visible,
 .quote-section { border-top: 1px solid var(--line-soft); background: linear-gradient(180deg, var(--bg-2), var(--bg)); }
 .quote { max-width: 900px; margin: auto; padding: clamp(60px, 8vw, 96px) var(--pad-x); color: var(--text); font-size: clamp(24px, 3.6vw, 42px); letter-spacing: -0.035em; line-height: 1.18; font-weight: 700; text-wrap: balance; }
 .quote-mark { color: var(--accent); }
+
+/* home footer */
+.home-footer {
+  max-width: var(--shell-max); margin: 0 auto; padding: clamp(48px, 6vw, 80px) var(--pad-x);
+  display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-end; justify-content: space-between;
+  border-top: 1px solid var(--line-soft);
+}
+.footer-copy { max-width: 460px; margin: 16px 0 0; color: var(--text-dim); font-size: 13.5px; line-height: 1.65; }
+
+/* models: future-facing panel */
+.future-panel {
+  max-width: var(--shell-max); margin: 26px auto 0; padding: clamp(28px, 4vw, 44px) var(--pad-x);
+}
 
 /* FAQ */
 .faq-list { display: grid; gap: 12px; max-width: 860px; }
