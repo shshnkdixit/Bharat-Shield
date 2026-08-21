@@ -75,6 +75,49 @@ export const AnalysisResultContentType = {
   video: 'video',
 } as const;
 
+export type EvidenceSeverity = 'high' | 'medium' | 'low';
+
+export interface EvidenceItem {
+  category: string;
+  label: string;
+  severity: EvidenceSeverity;
+  reason: string;
+  points: number;
+  matched?: string;
+}
+
+export type ClaimStatus = 'Supported' | 'Unverified' | 'Contradictory';
+
+export interface ClaimItem {
+  text: string;
+  status: ClaimStatus;
+  note: string;
+}
+
+export interface ManipulationStage {
+  stage: string;
+  present: boolean;
+  detail: string;
+}
+
+export type ProvenanceStatus = 'Verified' | 'Modified' | 'Unknown' | 'No provenance data';
+
+export interface ProvenanceInfo {
+  status: ProvenanceStatus;
+  detail: string;
+}
+
+export type MediaAuthenticityStatus =
+  | 'Unavailable'
+  | 'Low confidence'
+  | 'Likely authentic'
+  | 'Signs of manipulation';
+
+export interface MediaAuthenticity {
+  status: MediaAuthenticityStatus;
+  detail: string;
+}
+
 export interface AnalysisResult {
   id: string;
   /**
@@ -92,6 +135,17 @@ export interface AnalysisResult {
   language: string;
   sourceLabel: string;
   createdAt: string;
+  /** Enhanced FakeTrace Trust Report fields (optional for backward compatibility) */
+  confidence?: number;
+  confidenceLabel?: string;
+  threatTypes?: string[];
+  evidence?: EvidenceItem[];
+  claims?: ClaimItem[];
+  manipulationIntent?: ManipulationStage[];
+  provenance?: ProvenanceInfo;
+  mediaAuthenticity?: MediaAuthenticity;
+  beforeYouShare?: string;
+  limitations?: string[];
 }
 
 export type HistoryItem = AnalysisResult;
