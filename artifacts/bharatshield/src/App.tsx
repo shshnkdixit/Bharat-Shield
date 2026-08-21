@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Link, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
-import { AlertTriangle, ArrowRight, AudioLines, Check, ChevronRight, CircleHelp, FileAudio, FileImage, FileVideo, History as HistoryIcon, Info, Menu, MessageSquareText, Play, Radar, ScanSearch, ShieldCheck, Sparkles, Trash2, Upload, X } from 'lucide-react';
+import { AlertTriangle, ArrowRight, AudioLines, Check, ChevronRight, CircleHelp, Eye, FileAudio, FileImage, FileVideo, Fingerprint, History as HistoryIcon, Info, Languages, Lock, Menu, MessageSquareText, Play, Plus, Radar, ScanSearch, ShieldCheck, Sparkles, Trash2, Upload, X, Zap } from 'lucide-react';
 import { getGetHistoryQueryKey, getGetModelsQueryKey, useAnalyzeFile, useAnalyzeText, useDeleteHistory, useGetHistory, useGetModels, useHealthCheck } from '@workspace/api-client-react';
 import type { AnalysisResult, FileAnalysisInput } from '@workspace/api-client-react';
 
@@ -17,35 +17,148 @@ function Shell({ lang, setLang, children }: { lang: Lang; setLang: (v: Lang) => 
   const [open, setOpen] = useState(false);
   const t = copy[lang];
   const [location] = useLocation();
-  const links = [['/analyze', t.analyze], ['/history', t.history], ['/demo', t.demo], ['/models', t.models], ['/about', t.about]];
+  const links = [['/', lang === 'hi' ? 'होम' : 'Home'], ['/analyze', t.analyze], ['/history', t.history], ['/demo', t.demo], ['/models', t.models], ['/about', t.about]];
   return <div className="app-shell">
     <header className="topbar">
-      <Link href="/" className="brand" data-testid="link-brand"><span className="brand-mark"><ShieldCheck size={17} /></span><span className="brand-word">Bharat<em>Shield</em></span></Link>
-      <button className="mobile-menu" onClick={() => setOpen(!open)} data-testid="button-mobile-menu" aria-label="Toggle navigation"><Menu size={22} /></button>
+      <Link href="/" className="brand" data-testid="link-brand"><span className="brand-mark"><ShieldCheck size={18} /></span><span className="brand-word">Bharat<em>Shield</em></span></Link>
+      <button className="mobile-menu" onClick={() => setOpen(!open)} data-testid="button-mobile-menu" aria-label="Toggle navigation" aria-expanded={open}><Menu size={22} /></button>
       <nav className={`nav ${open ? 'open' : ''}`} aria-label="Main navigation">
-        {links.map(([href, label]) => <Link key={href} href={href} onClick={() => setOpen(false)} className={`nav-link ${location === href ? 'active' : ''}`} data-testid={`link-nav-${href.slice(1)}`}>{label}</Link>)}
-        <span className="lang-switch"><button className={`lang-btn ${lang === 'en' ? 'active' : ''}`} onClick={() => setLang('en')} data-testid="button-language-en">EN</button><button className={`lang-btn ${lang === 'hi' ? 'active' : ''}`} onClick={() => setLang('hi')} data-testid="button-language-hi">हिं</button></span>
+        {links.map(([href, label]) => <Link key={href} href={href} onClick={() => setOpen(false)} className={`nav-link ${location === href ? 'active' : ''}`} aria-current={location === href ? 'page' : undefined} data-testid={`link-nav-${href === '/' ? 'home' : href.slice(1)}`}>{label}</Link>)}
+        <span className="lang-switch"><button className={`lang-btn ${lang === 'en' ? 'active' : ''}`} onClick={() => setLang('en')} data-testid="button-language-en" aria-label="English">EN</button><button className={`lang-btn ${lang === 'hi' ? 'active' : ''}`} onClick={() => setLang('hi')} data-testid="button-language-hi" aria-label="Hindi">हिं</button></span>
+        <Link href="/analyze" onClick={() => setOpen(false)} className="btn btn-primary nav-cta" data-testid="link-nav-cta">{lang === 'hi' ? 'जाँच करें' : 'Analyze Something'}<ArrowRight size={15} /></Link>
       </nav>
     </header>
     {children}
   </div>;
 }
 
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return <div className={`faq-item ${open ? 'open' : ''}`}>
+    <button className="faq-q" onClick={() => setOpen(!open)} aria-expanded={open} data-testid="button-faq">{q}<Plus size={18} /></button>
+    <div className="faq-a">{a}</div>
+  </div>;
+}
+
+const problems = [
+  { icon: MessageSquareText, title: 'Manufactured urgency', body: 'Fraud borrows the language of banks, courier services, and government offices to rush you into acting before you think.' },
+  { icon: AlertTriangle, title: 'Trusted-looking senders', body: 'A familiar number, a copied logo, or a forwarded voice note can make a scam feel routine and safe.' },
+  { icon: Eye, title: 'Signals are hard to read', body: 'Most people never get a plain-language explanation of why a message is risky — only a gut feeling that is easy to override.' },
+];
+const modes = [
+  { icon: MessageSquareText, title: 'Text', body: 'Messages, links, and offers are checked for pressure, payment traps, and identity requests.', tag: 'Active' },
+  { icon: FileAudio, title: 'Audio', body: 'Voice-note and call-recording metadata workflows for scam-phrase analysis.', tag: 'Prototype' },
+  { icon: FileImage, title: 'Image', body: 'Screenshots and forwarded notices, checked for manipulation and copied context.', tag: 'Prototype' },
+  { icon: FileVideo, title: 'Video', body: 'Clip metadata as a step toward provenance and deepfake-signal review.', tag: 'Prototype' },
+];
+const flow = [
+  { no: 'STEP 01', title: 'Input', body: 'Paste a message or add a media file that made you hesitate.' },
+  { no: 'STEP 02', title: 'Analysis', body: 'BharatShield reads the available content and metadata for known patterns.' },
+  { no: 'STEP 03', title: 'Signals', body: 'Each warning pattern is named in plain language, not hidden in a score.' },
+  { no: 'STEP 04', title: 'Risk assessment', body: 'A first-pass risk level frames how much caution the message deserves.' },
+  { no: 'STEP 05', title: 'Recommended action', body: 'A concrete next step: verify, pause, or do not forward.' },
+];
+const faqs = [
+  { q: 'Does BharatShield guarantee a message is a scam?', a: 'No. It gives a first-pass risk assessment and names the signals behind it. Final judgment always stays with you and, where money is involved, with your bank’s fraud team.' },
+  { q: 'What content can I check?', a: 'Text messages today, with prototype workflows for audio, image, and video metadata. Text analysis produces real saved reports; media currently demonstrates the workflow using file metadata.' },
+  { q: 'Which languages are supported?', a: 'The interface ships in English and Hindi, with the structure prepared for Punjabi and Bhojpuri next. Analysis copy is written for Indian digital contexts.' },
+  { q: 'Is my data kept private?', a: 'BharatShield is built as a first-pass companion. Do not upload sensitive documents you do not need to check, and treat every result as guidance rather than a verdict.' },
+];
+
 function Home({ lang }: { lang: Lang }) {
   const t = copy[lang];
   const health = useHealthCheck({ query: { queryKey: ['/api/healthz'] as const, retry: 1 } });
   return <main>
     <section className="hero">
-      <div className="hero-copy"><div className="eyebrow">DIGITAL SAFETY / INDIA</div><h1 className="hero-title">{t.hero.split(' ').slice(0, 4).join(' ')} <span>{t.hero.split(' ').slice(4).join(' ')}</span></h1><p className="hero-sub">{t.heroSub}</p><div className="hero-actions"><Link href="/analyze" className="btn btn-primary" data-testid="link-start-analysis">{t.start}<ArrowRight size={16} /></Link><Link href="/demo" className="btn btn-outline" data-testid="link-see-demo"><Play size={14} /> {t.demo}</Link></div><div className="hero-note"><Check size={15} /> {t.check}</div></div>
-      <div className="signal-board" aria-label="Example BharatShield assessment">
-        <div className="board-card board-main"><div className="board-label"><span>BHARATSHIELD / FIRST PASS</span><span className="mono">#042</span></div><div className="board-score"><div className="score-ring"><strong>72</strong><small>RISK SCORE</small></div><div className="score-copy"><strong>HIGH RISK</strong><span>Pause before acting</span></div></div><div className="signal-row"><span className="signal-dot" /> Urgency and pressure language</div><div className="signal-row"><span className="signal-dot" /> Payment link has no clear context</div><div className="signal-row"><span className="signal-dot" /> Sender identity needs verification</div></div>
-        <div className="board-card board-float"><div className="float-caption">signals found</div><div className="float-value">03 patterns</div></div><div className="board-card board-float bottom"><div className="float-caption">recommended next step</div><div className="float-value">Do not forward</div></div>
+      <div className="hero-copy">
+        <span className="hero-badge"><span className="dot" /> DIGITAL SAFETY · INDIA</span>
+        <h1 className="hero-title">Don’t trust the message. <span>Verify it first.</span></h1>
+        <p className="hero-sub">{t.heroSub}</p>
+        <div className="hero-actions"><Link href="/analyze" className="btn btn-primary" data-testid="link-start-analysis">Analyze Something<ArrowRight size={16} /></Link><Link href="/demo" className="btn btn-outline" data-testid="link-see-demo"><Play size={14} /> Explore Demo</Link></div>
+        <div className="hero-note"><Check size={15} /> {t.check}</div>
+      </div>
+      <div className="signal-board" aria-label="Illustrative BharatShield assessment — not a real analysis">
+        <div className="board-card board-main">
+          <div className="board-label"><span>BHARATSHIELD / FIRST PASS</span><span className="mono">ILLUSTRATIVE</span></div>
+          <div className="board-modes"><span className="mode-chip"><MessageSquareText size={16} />TEXT</span><span className="mode-chip"><FileAudio size={16} />AUDIO</span><span className="mode-chip"><FileImage size={16} />IMAGE</span><span className="mode-chip"><FileVideo size={16} />VIDEO</span></div>
+          <div className="board-score"><div className="score-ring"><strong>72</strong><small>RISK SCORE</small></div><div className="score-copy"><strong>HIGH RISK</strong><span>Pause before acting</span></div></div>
+          <div className="signal-row"><span className="signal-dot" /> Urgency and pressure language</div>
+          <div className="signal-row"><span className="signal-dot" /> Payment link has no clear context</div>
+          <div className="signal-row"><span className="signal-dot" /> Sender identity needs verification</div>
+        </div>
+        <div className="board-card board-float"><div className="float-caption">signals found</div><div className="float-value">03 patterns</div></div>
+        <div className="board-card board-float bottom"><div className="float-caption">recommended next step</div><div className="float-value">Do not forward</div></div>
       </div>
     </section>
+
     <section className="stripe"><div className="stripe-inner"><p><strong>{health.isLoading ? 'Connecting' : health.isError ? 'Offline-ready' : 'Service ready'}</strong> · Built for the moment before a decision.</p><div className="stats"><div className="stat"><strong>4</strong><span>content types</span></div><div className="stat"><strong>2</strong><span>languages</span></div><div className="stat"><strong>1</strong><span>clear pause</span></div></div></div></section>
-    <section className="home-section"><div className="home-grid"><div><div className="section-kicker">THE METHOD</div><h2>{t.how}</h2><p className="page-lead">{t.howSub}</p></div><div className="steps"><div className="step-card"><span className="step-no">MULTIMODAL</span><h3>Audio · Video · Image · Text</h3><p>Bring the strange message or media metadata that made you hesitate.</p></div><div className="step-card"><span className="step-no">MULTILINGUAL</span><h3>Made for Indian-language users</h3><p>Start with English and Hindi, with room for Punjabi and Bhojpuri next.</p></div><div className="step-card"><span className="step-no">EXPLAINABLE</span><h3>Understand why it is suspicious</h3><p>Get a score, signals, and a practical next step instead of a black-box verdict.</p></div></div></div></section>
+
+    <section className="section" id="why">
+      <div className="section-head"><div className="eyebrow">Why BharatShield</div><h2>Scams rarely arrive looking like scams.</h2><p>Suspicious digital content, misinformation and manipulation are engineered to feel ordinary. BharatShield helps you slow down and see the signals.</p></div>
+      <div className="problem-grid">{problems.map((p) => { const Icon = p.icon; return <article className="problem-card" key={p.title}><span className="problem-icon"><Icon size={20} /></span><h3>{p.title}</h3><p>{p.body}</p></article>; })}</div>
+    </section>
+
+    <section className="section section-alt" id="multimodal">
+      <div className="section-head"><div className="section-kicker">Multimodal Intelligence</div><h2>One assessment across four kinds of content.</h2><p>Threats do not stay in one format. BharatShield is designed to reason across text, audio, image and video signals.</p></div>
+      <div className="mode-grid">{modes.map((m) => { const Icon = m.icon; return <article className="mode-card" key={m.title}><span className="m-icon"><Icon size={22} /></span><h3>{m.title}</h3><p>{m.body}</p><span className="m-tag">{m.tag}</span></article>; })}</div>
+    </section>
+
+    <section className="section" id="how">
+      <div className="section-head"><div className="eyebrow">How BharatShield works</div><h2>Five calm steps from a strange message to a safer decision.</h2></div>
+      <div className="flow">{flow.map((f) => <div className="flow-step" key={f.no}><span className="f-no">{f.no}</span><h4>{f.title}</h4><p>{f.body}</p><ChevronRight className="f-arrow" size={18} /></div>)}</div>
+    </section>
+
+    <section className="section section-alt" id="explainable">
+      <div className="split">
+        <div>
+          <div className="section-kicker">Explainable Assessment</div>
+          <h2>A score is the start of the story, not the end.</h2>
+          <p>Black-box verdicts are easy to distrust and easy to ignore. BharatShield shows the understandable signals behind every assessment, so you can judge them yourself.</p>
+          <ul className="feature-list">
+            <li><Zap size={17} /> Named signals in plain language, not opaque probabilities.</li>
+            <li><Check size={17} /> A recommended next step you can actually act on.</li>
+            <li><Eye size={17} /> Honest labels when a result is a prototype or demo.</li>
+          </ul>
+        </div>
+        <div className="explain-panel">
+          <div className="ep-head"><div className="eyebrow">Signal breakdown</div><span className="risk-badge risk-high">HIGH RISK</span></div>
+          <div className="explain-row"><span className="er-mark"><AlertTriangle size={15} /></span><div><strong>Artificial urgency</strong><span>“Act within 30 minutes” pressures you past your own judgment.</span></div></div>
+          <div className="explain-row"><span className="er-mark"><AlertTriangle size={15} /></span><div><strong>Unexplained payment link</strong><span>A request to pay with no legitimate context or reference.</span></div></div>
+          <div className="explain-row"><span className="er-mark"><AlertTriangle size={15} /></span><div><strong>Unverified identity</strong><span>The sender claims authority the message cannot prove.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section className="section" id="context">
+      <div className="section-head"><div className="eyebrow">Built for India</div><h2>Local languages. Local context. Privacy by default.</h2></div>
+      <div className="band">
+        <div className="band-card accent"><span className="band-icon"><Languages size={22} /></span><h3>Multilingual by design</h3><p>Indian users move between scripts and languages in a single conversation. The interface starts in English and Hindi, and the assessment copy is written for Indian digital life.</p><div className="chip-row"><span className="lang-chip">English</span><span className="lang-chip">हिन्दी</span><span className="lang-chip">ਪੰਜਾਬੀ · soon</span><span className="lang-chip">भोजपुरी · soon</span></div></div>
+        <div className="band-card"><span className="band-icon"><Lock size={22} /></span><h3>Privacy-conscious</h3><p>BharatShield is a first-pass companion, not an archive of your private life. Check only what you need to check, and treat every result as guidance rather than a stored verdict.</p><p style={{ marginTop: 12 }}><Fingerprint size={15} style={{ verticalAlign: '-2px', marginRight: 6, color: 'var(--saffron)' }} />Human judgment always stays in charge.</p></div>
+      </div>
+    </section>
+
     <section className="quote-section"><p className="quote"><span className="quote-mark">“</span> A warning is useful only when it tells you what to do next.</p></section>
-    <footer className="home-footer"><div><div className="brand"><span className="brand-mark"><ShieldCheck size={17} /></span><span className="brand-word">Bharat<em>Shield</em></span></div><p className="footer-copy">{t.footer} BharatShield is a first-pass companion, not a replacement for your judgment or your bank’s fraud team.</p></div><Link href="/about" className="btn btn-quiet" data-testid="link-learn-about">Read our limits <ChevronRight size={15} /></Link></footer>
+
+    <section className="section" id="faq">
+      <div className="section-head"><div className="eyebrow">Questions</div><h2>What BharatShield does — and does not — claim.</h2></div>
+      <div className="faq">{faqs.map((f) => <FaqItem key={f.q} q={f.q} a={f.a} />)}</div>
+    </section>
+
+    <section className="cta-final">
+      <h2>Before you click.<br />Before you pay. Before you forward.</h2>
+      <p>Bring the message that made you hesitate and get a clear, explainable first-pass assessment in seconds.</p>
+      <div className="hero-actions"><Link href="/analyze" className="btn btn-primary" data-testid="link-cta-analyze">Analyze Something<ArrowRight size={16} /></Link><Link href="/about" className="btn btn-outline" data-testid="link-cta-about">Read our limits<ChevronRight size={15} /></Link></div>
+    </section>
+
+    <footer className="home-footer">
+      <div className="footer-inner">
+        <div className="footer-brand"><div className="brand"><span className="brand-mark"><ShieldCheck size={18} /></span><span className="brand-word">Bharat<em>Shield</em></span></div><p>{t.footer} BharatShield is a first-pass companion, not a replacement for your judgment or your bank’s fraud team.</p></div>
+        <div className="footer-col"><h4>Product</h4><Link href="/analyze">Analyze</Link><Link href="/demo">Demo Lab</Link><Link href="/models">Model Center</Link><Link href="/history">History</Link></div>
+        <div className="footer-col"><h4>Company</h4><Link href="/about">About</Link><a href="#why">Why BharatShield</a><a href="#how">How it works</a><a href="#faq">FAQ</a></div>
+        <div className="footer-col"><h4>Approach</h4><a href="#explainable">Explainable</a><a href="#multimodal">Multimodal</a><a href="#context">India-focused</a></div>
+      </div>
+      <div className="footer-bar"><div className="footer-bar-inner"><span>© {new Date().getFullYear()} BharatShield · A clearer pause in a noisy inbox.</span><span className="mono">Prototype · Not financial advice</span></div></div>
+    </footer>
   </main>;
 }
 
